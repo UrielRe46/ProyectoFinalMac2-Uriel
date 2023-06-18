@@ -9,8 +9,6 @@ import Cocoa
 
 class RegistrarUsuario: NSViewController {
     
-    //TODO: Validar contraseñas seguras
-    
     @IBOutlet weak var vc: ViewController!
     
     @IBOutlet weak var txtNombre: NSTextField!
@@ -22,8 +20,8 @@ class RegistrarUsuario: NSViewController {
     @IBOutlet weak var txtPassword: NSTextField!
     @IBOutlet weak var txtConfirmarPassword: NSTextField!
     
-    @IBOutlet weak var cmbRoles: NSPopUpButton!
-    
+    @IBOutlet weak var cmbImagenFondo: NSPopUpButton!
+    @IBOutlet weak var cmbColorFondo: NSPopUpButton!
     @IBOutlet weak var btnRegistrar: NSButton!
     
     @IBOutlet weak var lblClienteExistente: NSTextField!
@@ -40,22 +38,27 @@ class RegistrarUsuario: NSViewController {
     var idUsuarioAModificar:Int = 0
     var edad:Int = 0
     
+    let colores = ["Rosa", "Morado", "Amarillo", "Verde", "Azul", "Sin color"]
+    var colorSeleccionado: String = "Rosa"
+    
+    let imagenesFondo = ["trina", "andre", "cat", "robbie", "beck", "jade", "tori", "Sin avatar"]
+    var imgSeleccionada: String = "trina"
+    
     @objc dynamic var usuarioLog:[UsuarioModelo] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        cmbRoles.isHidden = true
-        
-        cmbRoles.removeAllItems()
-       cmbRoles.addItems(withTitles: roles)
-        cmbRoles.selectItem(at: 1)
-        
         lblCamposVacios.isHidden = true;
         
         position = vc.usuarioLog.count
         
-
+        cmbColorFondo.removeAllItems()
+        cmbColorFondo.addItems(withTitles: colores)
+        
+        cmbImagenFondo.removeAllItems()
+        cmbImagenFondo.addItems(withTitles: imagenesFondo)
+        
         btnRegistrar.isEnabled = true
         
         lblClienteExistente.isHidden = true
@@ -64,16 +67,10 @@ class RegistrarUsuario: NSViewController {
             lblClienteExistente.isHidden = false
         }
         
-        //FALTA EL NSVIEW DE LA IMAGEN
-        //vc.cambiarImagenYFondo(idUsuarioActual: vc.idUsuarioActual, imgAvatar: imgAvatar, view: self.view)
+        cmbColorFondo.selectItem(at:0)
+        cmbImagenFondo.selectItem(at:0)
         
     }
-    
-    @IBAction func rolCambiado(_ sender: NSPopUpButton) {
-        let indiceSeleccionado = sender.indexOfSelectedItem
-            rolSeleccionado = roles[indiceSeleccionado]
-            
-        }
     
     @IBAction func registrarUsuario(_ sender: NSButton) {
         
@@ -87,9 +84,11 @@ class RegistrarUsuario: NSViewController {
                             if validarEdad(){
                                 lblCamposVacios.isHidden = true
                                 
-                                vc.usuarioLog.append(UsuarioModelo(position, txtNombre.stringValue, txtApellidoPaterno.stringValue, txtApellidoMaterno.stringValue, txtEmail.stringValue, txtTelefono.stringValue, txtGenero.stringValue, edad, txtPassword.stringValue, txtConfirmarPassword.stringValue, "Cliente",dtpFechaNacimiento.dateValue, "", ""))
+                                vc.usuarioLog.append(UsuarioModelo(position, txtNombre.stringValue, txtApellidoPaterno.stringValue, txtApellidoMaterno.stringValue, txtEmail.stringValue, txtTelefono.stringValue, txtGenero.stringValue, edad, txtPassword.stringValue, txtConfirmarPassword.stringValue, "Cliente",dtpFechaNacimiento.dateValue, colorSeleccionado, imgSeleccionada))
                                 
                             print("Agregaste Cliente")
+                                print(colorSeleccionado)
+                                print(imgSeleccionada)
                                 print("id de user agregado", position)
 
                                 dismiss(self)
@@ -201,6 +200,18 @@ class RegistrarUsuario: NSViewController {
     @IBAction func cerrarViewController(_ sender: NSButton) {
        print("entra al ib action?")
         dismiss(self)
+    }
+    
+    
+    @IBAction func colorCambiado(_ sender: NSPopUpButton) {
+        let indiceSeleccionado = sender.indexOfSelectedItem
+            colorSeleccionado = colores[indiceSeleccionado]
+    }
+    
+
+    @IBAction func imgCambiado(_ sender: NSPopUpButton) {
+        let indiceSeleccionado = sender.indexOfSelectedItem
+            imgSeleccionada = imagenesFondo[indiceSeleccionado]
     }
     
     override func viewDidDisappear() {
